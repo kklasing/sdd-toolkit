@@ -18,7 +18,7 @@ Work tasks in the order listed; respect dependencies. Independent tasks may run 
 
 For each task `T###`:
 
-- **Dispatch a subagent** to implement just that task, scoped to its `Files:` and the requirements named in its `Traces:`. Tell it to follow the `sdd-tdd` skill (red → green at the agreed seams, one vertical slice at a time) and to not expand scope beyond the task.
+- **Dispatch a subagent** to implement just that task, scoped to its `Files:` and the requirements named in its `Traces:`. Tell it to follow the `sdd-tdd` skill (red → green at the agreed seams, one vertical slice at a time) and to not expand scope beyond the task. **Prefix the subagent's description with the task id** — e.g. `T012: implement the login form` — so token usage can later be attributed back to the task (see _Report token usage_).
 - **Guard the slice.** A well-formed task is already a vertical slice (one behaviour through its layers, with its test). If you find a task that is actually a horizontal layer or splits tests from implementation, stop and fix `tasks.md` (re-slice it) before building — don't let the subagent build it flat.
 - **Fan out where it's safe:** tasks whose `Files:` don't overlap can run in parallel subagents; tasks that touch the same files run sequentially to avoid conflicts.
 - **On return, verify locally:** run typechecking and the task's relevant test file. If it's red, fix it or bounce it back to the subagent until green.
@@ -29,6 +29,15 @@ For each task `T###`:
 
 - Run the **full test suite once** at the end — it must pass.
 - Run `sdd lint` and `sdd trace-check`: every `FR-###` covered by a task, no open `[NEEDS CLARIFICATION]`, every commit traced to a task.
+
+## Report token usage
+
+Give the run a cost record: how many tokens each task burned and which model did the work.
+
+- Run `sdd token-report` once the implementation subagents have finished (before or after review — reviews count too). It reads Claude Code's own transcripts for this session, rolls up **real** `usage` and `model`, and writes `specs/NNN-slug/token-usage.csv` (opens directly in Excel). It also prints a per-task summary table.
+- The CSV has one row per subagent plus a final **orchestrator** row — the main-session (your own) tokens, which aren't per-task, attributed to the spec as a whole (the `task` column carries the feature reference). Pass `--no-orchestrator` to report subagents only.
+- Per-task attribution depends on the `T###`-prefixed descriptions you dispatched with — subagents without a task id in their description are still reported, grouped under their raw description. Don't hand-estimate token counts; the numbers come from the transcript, not from you.
+- If the report lands in the wrong feature folder or session, scope it explicitly: `sdd token-report --feature NNN-slug --session <id> --out <path>`.
 
 ## Review
 
