@@ -24,7 +24,7 @@ This scaffolds (idempotently — re-runs preserve your edits):
   sdd.manifest.json               # hash manifest for safe upgrades
 .claude/skills/
   sdd-grill-with-docs/  sdd-domain-modeling/  sdd-tdd/  sdd-review/   # thinking skills
-  sdd-specify/  sdd-plan/  sdd-tasks/                                             # artifact orchestration
+  sdd-specify/  sdd-plan/  sdd-tasks/  sdd-implement/                 # artifact orchestration
 .github/
   workflows/sdd.yml               # runs `sdd lint` + `sdd trace-check`
   pull_request_template.md        # human-reviewer attestation
@@ -46,8 +46,12 @@ fills a strict template):
 | `sdd-specify`  | your idea        | `spec.md` (`FR-###` requirements)|
 | `sdd-plan`     | `spec.md`, constitution | `plan.md` (+ Constitution Check) |
 | `sdd-tasks`    | `plan.md`        | `tasks.md` (`T###` → `FR-###`)  |
+| `sdd-implement`| `tasks.md`, constitution | code + `T###:` commits, ticked tasks |
 
-Build with `sdd-tdd`, review against the constitution with `sdd-review`.
+`sdd-implement` runs the build loop: it works through `tasks.md` task by task,
+dispatching subagents that build TDD-first (`sdd-tdd`) at agreed seams and
+committing each task as `T###:`, then fans out `sdd-review` subagents across the
+Standards (constitution) and Spec (`FR-###`) axes.
 
 ## The gates
 
