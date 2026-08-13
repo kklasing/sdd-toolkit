@@ -4,7 +4,7 @@ description: Implement a feature's tasks from tasks.md — TDD-first, subagent-d
 disable-model-invocation: true
 ---
 
-Implement the tasks in the current feature's `tasks.md`, one traceable slice at a time, using subagents for development and review wherever the work can be parallelised.
+Implement the tasks in the current feature's `tasks.md`, one traceable slice at a time, using subagents for development and review wherever the work can run in parallel.
 
 ## Orient
 
@@ -19,6 +19,7 @@ Work tasks in the order listed; respect dependencies. Independent tasks may run 
 For each task `T###`:
 
 - **Dispatch a subagent** to implement just that task, scoped to its `Files:` and the requirements named in its `Traces:`. Tell it to follow the `sdd-tdd` skill (red → green at the agreed seams, one vertical slice at a time) and to not expand scope beyond the task.
+- **Guard the slice.** A well-formed task is already a vertical slice (one behaviour through its layers, with its test). If you find a task that is actually a horizontal layer or splits tests from implementation, stop and fix `tasks.md` (re-slice it) before building — don't let the subagent build it flat.
 - **Fan out where it's safe:** tasks whose `Files:` don't overlap can run in parallel subagents; tasks that touch the same files run sequentially to avoid conflicts.
 - **On return, verify locally:** run typechecking and the task's relevant test file. If it's red, fix it or bounce it back to the subagent until green.
 - **Commit on the current branch** with the task id as the subject prefix: `T###: <subject>`. This is exactly what `sdd trace-check` verifies.

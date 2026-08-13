@@ -9,6 +9,11 @@
 > spec.md must appear in at least one task's `Traces:` line** — `sdd lint`
 > enforces this. Keep task IDs stable; commits reference them (`T001: …`).
 >
+> Each task is a **vertical slice** — one observable behaviour cut through every
+> layer it needs, with its test. Not a horizontal layer ("all models") and not
+> "write all tests" split from "implement". `Files:` spans the layers the
+> behaviour touches.
+>
 > Task format (do not change the shape — the gates parse it):
 >
 > ```
