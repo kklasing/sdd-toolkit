@@ -34,30 +34,84 @@ specs/                            # feature folders land here
 
 ## The loop
 
-```bash
-sdd new "User login"     # → specs/001-user-login/ (from templates) + branch 001-user-login
+One feature runs top-to-bottom through `specs/NNN-slug/`. The **happy path** is the
+solid arrows; the **dashed arrows** are the step-backs — when a later phase exposes
+a gap, you return to the phase that owns the fix and the trace IDs keep everything
+aligned.
+
+```mermaid
+flowchart TD
+    new["sdd new<br/>feature folder + branch"]
+    specify["1 · sdd-specify<br/>spec.md — grill-with-docs then to-spec"]
+    plan["2 · sdd-plan<br/>plan.md + Constitution Check"]
+    tasks["3 · sdd-tasks<br/>tasks.md — T### traces FR###"]
+    implement["4 · sdd-implement<br/>code + T### commits + sdd-review"]
+    gates{"5 · Gates<br/>sdd lint + sdd trace-check"}
+    pr["PR<br/>human review & merge"]
+
+    new --> specify --> plan --> tasks --> implement --> gates
+    gates -->|pass| pr
+
+    plan -.->|spec gap| specify
+    tasks -.->|plan insufficient| plan
+    implement -.->|task mis-sliced| tasks
+    implement -.->|missing requirement| specify
+    gates -->|FR uncovered| tasks
+    gates -->|open clarification| specify
+    gates -->|commit untraced| implement
+    pr -.->|changes requested| implement
 ```
 
-Then, inside Claude Code, drive each phase with a skill (each grills/thinks, then
-fills a strict template):
+### `sdd new "<title>"` — start a feature
 
-| Skill          | Reads            | Writes                          |
-|----------------|------------------|---------------------------------|
-| `sdd-specify`  | your idea        | `spec.md` (`FR-###` requirements)|
-| ↳ `sdd-to-spec`| shared understanding | `spec.md` — explores the repo, fixes the testing seams, writes + validates it |
-| `sdd-plan`     | `spec.md`, constitution | `plan.md` (+ Constitution Check) |
-| `sdd-tasks`    | `plan.md`        | `tasks.md` (`T###` → `FR-###`)  |
-| `sdd-implement`| `tasks.md`, constitution | code + `T###:` commits, ticked tasks |
+The one CLI step. Allocates the next `NNN`, slugifies the title, renders the
+templates into `specs/NNN-slug/`, and creates + checks out the branch (branch ==
+folder). Everything after this is driven by skills inside Claude Code.
 
-`sdd-specify` composes two component skills: `sdd-grill-with-docs` (the
-interview) then `sdd-to-spec` (repo exploration, testing-seam identification, and
-writing + validating the spec). You can also invoke `sdd-to-spec` on its own to
-turn a design conversation you've already had into a spec, skipping the grilling.
+### 1. `sdd-specify` — write the spec
 
-`sdd-implement` runs the build loop: it works through `tasks.md` task by task,
-dispatching subagents that build TDD-first (`sdd-tdd`) at agreed seams and
-committing each task as `T###:`, then fans out `sdd-review` subagents across the
-Standards (constitution) and Spec (`FR-###`) axes.
+Composes two component skills: `sdd-grill-with-docs` (a relentless interview that
+also captures ADRs and glossary terms) then `sdd-to-spec` (explores the repo,
+fixes the testing seams, writes the `FR-###` requirements into `spec.md`, and
+validates them). Genuine unknowns become `[NEEDS CLARIFICATION]` markers (max 3)
+you resolve before moving on. You can also run `sdd-to-spec` on its own to
+synthesise a spec from a conversation you've already had, skipping the grilling.
+
+### 2. `sdd-plan` — design the approach
+
+Reads `spec.md` and the constitution and produces `plan.md` with a mandatory
+**Constitution Check** (PASS/DEVIATION per rule). It dispatches research subagents
+into `research.md` and sharpens the domain (`sdd-domain-modeling`) into
+`data-model.md` / `contracts/` as the feature warrants. Deviations are logged in
+`decisions.md`.
+
+### 3. `sdd-tasks` — break it into tasks
+
+Turns `plan.md` into `tasks.md`: dependency-ordered, MVP-first, **every `FR-###`
+covered by ≥1 task**, each task a **vertical slice** (one behaviour through its
+layers, with its test) in the `T### → Traces/Files` format.
+
+### 4. `sdd-implement` — build it
+
+Works `tasks.md` task by task, dispatching subagents that build TDD-first
+(`sdd-tdd`) at the agreed seams and committing each as `T###:`, then fans out
+`sdd-review` subagents across the Standards (constitution) and Spec (`FR-###`)
+axes.
+
+### 5. Gates & PR
+
+`sdd lint` and `sdd trace-check` run locally and in CI (see [The gates](#the-gates)).
+A green run plus human review on the PR — with the constitution attestation in the
+PR template — closes the loop.
+
+### Stepping back
+
+The dashed edges above: planning can send you back to the spec (`spec gap`); a
+mis-sliced task back to `sdd-tasks`; a **missing requirement** surfaced during the
+build all the way back to `sdd-specify`; and a **failing gate** back to whichever
+phase owns the fix — an uncovered FR to `sdd-tasks`, an open clarification to
+`sdd-specify`, an untraced commit to `sdd-implement`. Because every artifact is
+traced, stepping back is cheap: edit the earlier file and re-run forward.
 
 ## The gates
 
