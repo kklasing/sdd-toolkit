@@ -11,3 +11,6 @@ build/
 
 # Environments
 .venv/
+
+# Local brief / working notes
+brief/
