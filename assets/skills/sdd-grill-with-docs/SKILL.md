@@ -1,6 +1,7 @@
 ---
 name: sdd-grill-with-docs
 description: Grill the user relentlessly about a plan, decision, or idea while capturing docs (ADRs and glossary) as you go. Use when the user wants to stress-test their thinking, uses any 'grill' trigger phrases, or when a spec/plan needs interrogating before it is written.
+disable-model-invocation: true
 ---
 
 Interview the user relentlessly until you reach a shared understanding, and capture the durable outcomes as docs while you go. Map this as a **design tree**: every decision branches into the decisions that hang off it.
