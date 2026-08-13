@@ -24,18 +24,3 @@ jobs:
         run: >
           uvx --from git+https://github.com/kklasing/sdd-toolkit
           sdd trace-check --base origin/${{ github.base_ref || 'main' }}
-
-  # --------------------------------------------------------------------------
-  # Project-specific stages. Uncomment and fill in for the adopting repo.
-  # --------------------------------------------------------------------------
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: <your test command>
-  #
-  # boundaries:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: npx dependency-cruiser --validate .dependency-cruiser.js src
