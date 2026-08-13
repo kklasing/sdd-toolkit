@@ -45,6 +45,14 @@ Every FR must be covered by at least one task in tasks.md.
 
 1. **Given** … **when** … **then** …
 
+## Assumptions
+
+<!-- Reasonable defaults chosen for details the user didn't specify, so they're
+     visible rather than silent. Prefer an assumption over a clarification marker
+     for anything with a sensible industry-standard default. -->
+
+-
+
 ## Open questions
 
 <!-- Anything blocking a complete spec. Convert each to a [NEEDS CLARIFICATION] above. -->
