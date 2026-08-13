@@ -1,0 +1,37 @@
+[project]
+name = "sdd-toolkit"
+version = "0.1.0"
+description = "Spec-driven development toolkit: an artifact contract (feature folders, trace IDs, gates) on top of Claude Code thinking skills."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Koen Klasing" }]
+dependencies = [
+    "typer>=0.12.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0", "pytest-cov>=5.0"]
+
+[project.scripts]
+sdd = "sdd_toolkit.__init__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sdd_toolkit"]
+
+# Bundle the source assets INTO the wheel under sdd_toolkit/core_pack/ so a
+# `uvx --from git+...` install carries everything it needs with no network fetch.
+[tool.hatch.build.targets.wheel.force-include]
+"assets/memory" = "sdd_toolkit/core_pack/memory"
+"assets/templates" = "sdd_toolkit/core_pack/templates"
+"assets/skills" = "sdd_toolkit/core_pack/skills"
+"assets/github" = "sdd_toolkit/core_pack/github"
+"assets/docs" = "sdd_toolkit/core_pack/docs"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

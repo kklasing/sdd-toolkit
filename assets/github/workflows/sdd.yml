@@ -1,0 +1,41 @@
+name: sdd
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  gates:
+    name: sdd gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so trace-check can diff against the base
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: spec-lint
+        run: uvx --from git+https://github.com/kklasing/sdd-toolkit sdd lint --all
+
+      - name: trace-check
+        run: >
+          uvx --from git+https://github.com/kklasing/sdd-toolkit
+          sdd trace-check --base origin/${{ github.base_ref || 'main' }}
+
+  # --------------------------------------------------------------------------
+  # Project-specific stages. Uncomment and fill in for the adopting repo.
+  # --------------------------------------------------------------------------
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: <your test command>
+  #
+  # boundaries:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: npx dependency-cruiser --validate .dependency-cruiser.js src
