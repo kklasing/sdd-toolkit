@@ -25,33 +25,14 @@ Given the feature description, work these steps in order. Steps 1–3 are perfor
 4. **Load the spec template.** Read `spec.md` (rendered from `.sdd/templates/spec-template.md`) to understand the required sections and their order: Summary, Goals, Non-goals, Functional requirements (`FR-###`), Non-functional requirements (`NFR-###`), User scenarios, Open questions.
 5. **Load the constitution** (if it exists). Read `.sdd/memory/constitution.md` for principles and constraints the spec must respect (e.g. data classes, boundaries). Don't restate it in the spec — just don't contradict it.
 6. **Interrogate the idea.** Invoke the `sdd-grill-with-docs` skill and work its rounds until the user confirms a shared understanding. This is where real requirements are separated from guesses, and where any hard, surprising trade-offs are captured as ADRs and any sharpened terms land in `CONTEXT.md`. Do not skip it.
-7. **Synthesise the spec.** Invoke the `sdd-to-spec` skill to turn that shared understanding into `spec.md`. It explores the repository (applying `CONTEXT.md` and the relevant `docs/adr/` ADRs), identifies and validates the testing seams with the user (so `sdd-tdd`/`sdd-implement` reuse them), and writes the `FR-###` requirements into the template — every FR traced to the grilling, informed guesses recorded under **Assumptions**, and genuine forks marked `[NEEDS CLARIFICATION]` (max 3, prioritised scope > security/privacy > UX > technical). If no clear user flow exists, ERROR — you cannot determine scenarios.
-8. **Specification quality validation.** After writing the draft, review it against this checklist and fix what fails (re-run up to 3 times):
-   - **Content quality**: no implementation details; focused on user value; readable by a non-technical stakeholder; all mandatory sections completed.
-   - **Requirement completeness**: requirements testable and unambiguous; Goals are measurable success criteria (see *Success Criteria Guidelines*); user scenarios cover the primary flows; edge cases identified; scope clearly bounded; assumptions recorded; ≤3 `[NEEDS CLARIFICATION]` markers.
-   - For each remaining `[NEEDS CLARIFICATION]`, present it to the user as a numbered question with a small options table so it's cheap to answer:
-
-     ```markdown
-     ## Question 1: <topic>
-
-     **Context**: <quote the relevant spec section>
-     **What we need to know**: <the specific question>
-
-     | Option | Answer | Implications |
-     |--------|--------|--------------|
-     | A      | …      | …            |
-     | B      | …      | …            |
-     | Custom | your own answer | … |
-     ```
-
-     Present all questions together (max 3), wait for the answers, then replace each marker with the resolved decision and re-validate.
+7. **Synthesise and validate the spec.** Invoke the `sdd-to-spec` skill to turn that shared understanding into `spec.md`. It explores the repository (applying `CONTEXT.md` and the relevant `docs/adr/` ADRs), identifies and validates the testing seams with the user (so `sdd-tdd`/`sdd-implement` reuse them), writes the `FR-###` requirements into the template, and validates the result against its quality checklist — surfacing any `[NEEDS CLARIFICATION]` (max 3) to you for resolution. Every FR traces to the grilling; assumptions are recorded; the spec stays about *what* and *why*, never *how*.
 
 ## Mandatory Post-Execution
 
 Complete this before reporting done:
 
-- **Resolve clarifications.** Every `[NEEDS CLARIFICATION]` marker must be resolved (unresolved markers fail `sdd lint`). If the user defers one, that's their call — flag it explicitly as blocking the gate.
-- **Confirm lint-readiness.** The spec should be ready for `sdd lint` once tasks exist (lint checks: required files present, no open clarifications, every FR later covered by a task). Note that FR→task coverage is enforced after `sdd-tasks` runs.
+- **Confirm clarifications resolved.** `sdd-to-spec` surfaces any `[NEEDS CLARIFICATION]` for resolution; confirm none remain (unresolved markers fail `sdd lint`). If the user deferred one, flag it explicitly as blocking the gate.
+- **Confirm lint-readiness.** The spec should be ready for `sdd lint` once tasks exist (lint checks: required files present, no open clarifications, every FR later covered by a task). FR→task coverage is enforced after `sdd-tasks` runs.
 - **Hand off.** The next phase is `sdd-plan` (or `sdd-tasks` after planning). Point the user there.
 
 ## Completion Report
@@ -63,22 +44,8 @@ Report to the user:
 - any unresolved clarifications that will block the gate,
 - readiness for the next phase (`sdd-plan`).
 
-## Success Criteria Guidelines
-
-The spec's **Goals** (and any quantitative **NFRs**) are its success criteria. Each must be:
-
-1. **Measurable** — a specific metric (time, percentage, count, rate).
-2. **Technology-agnostic** — no frameworks, languages, databases, or tools.
-3. **User-focused** — an outcome from the user/business perspective, not a system internal.
-4. **Verifiable** — testable without knowing the implementation.
-
-**Good**: "Users can complete checkout in under 3 minutes" · "95% of searches return results in under 1 second" · "Task completion rate improves by 40%".
-
-**Bad** (implementation-focused): "API response time under 200ms" (say "users see results instantly") · "Database handles 1000 TPS" · "React components render efficiently".
-
 ## Done When
 
-- [ ] `spec.md` written using the template's sections, with `FR-###` requirements traced to the grilling.
-- [ ] Testing seams identified and validated with the user.
-- [ ] Spec validated against the quality checklist; ≤3 clarifications, each surfaced to the user.
+- [ ] Spec produced and validated by `sdd-to-spec` — `FR-###` requirements traced to the grilling, testing seams validated with the user, ≤3 clarifications each surfaced for resolution.
+- [ ] No unresolved `[NEEDS CLARIFICATION]` remain (or deferrals flagged as blocking the gate).
 - [ ] Completion reported with the feature directory, spec path, quality summary, and readiness for `sdd-plan`.
