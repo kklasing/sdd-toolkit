@@ -39,27 +39,35 @@ solid arrows; the **dashed arrows** are the step-backs — when a later phase ex
 a gap, you return to the phase that owns the fix and the trace IDs keep everything
 aligned.
 
+Each box is the skill you invoke; the label on each **solid** arrow is what that
+phase produces and the next one reads — usually the `.md` it writes. **Dashed**
+arrows are the step-backs, each labelled with what triggers it.
+
 ```mermaid
 flowchart TD
-    new["sdd new<br/>feature folder + branch"]
-    specify["1 · sdd-specify<br/>spec.md — grill-with-docs then to-spec"]
-    plan["2 · sdd-plan<br/>plan.md + Constitution Check"]
-    tasks["3 · sdd-tasks<br/>tasks.md — T### traces FR###"]
-    implement["4 · sdd-implement<br/>code + T### commits + sdd-review"]
-    gates{"5 · Gates<br/>sdd lint + sdd trace-check"}
-    pr["PR<br/>human review & merge"]
+    new(["sdd new"])
+    specify["1 · sdd-specify"]
+    plan["2 · sdd-plan"]
+    tasks["3 · sdd-tasks"]
+    implement["4 · sdd-implement"]
+    gates{"5 · gates"}
+    pr(["PR — review &amp; merge"])
 
-    new --> specify --> plan --> tasks --> implement --> gates
+    new -->|folder + branch| specify
+    specify -->|spec.md| plan
+    plan -->|plan.md| tasks
+    tasks -->|tasks.md| implement
+    implement -->|code + T### commits| gates
     gates -->|pass| pr
 
-    plan -.->|spec gap| specify
-    tasks -.->|plan insufficient| plan
-    implement -.->|task mis-sliced| tasks
-    implement -.->|missing requirement| specify
-    gates -->|FR uncovered| tasks
-    gates -->|open clarification| specify
-    gates -->|commit untraced| implement
-    pr -.->|changes requested| implement
+    plan -. spec gap .-> specify
+    tasks -. plan insufficient .-> plan
+    implement -. task mis-sliced .-> tasks
+    implement -. missing requirement .-> specify
+    gates -. FR uncovered .-> tasks
+    gates -. open clarification .-> specify
+    gates -. untraced commit .-> implement
+    pr -. changes requested .-> implement
 ```
 
 ### `sdd new "<title>"` — start a feature
