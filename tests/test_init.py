@@ -15,6 +15,7 @@ EXPECTED = [
     ".sdd/templates/tasks-template.md",
     ".claude/skills/sdd-grill-with-docs/SKILL.md",
     ".claude/skills/sdd-specify/SKILL.md",
+    ".claude/skills/sdd-to-spec/SKILL.md",
     ".claude/skills/sdd-implement/SKILL.md",
     ".github/workflows/sdd.yml",
     ".github/pull_request_template.md",
