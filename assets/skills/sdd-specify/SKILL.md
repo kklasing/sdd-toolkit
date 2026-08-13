@@ -15,7 +15,7 @@ The feature folder must already exist. If `specs/NNN-slug/` (with a rendered `sp
 
 ### 1. Grill the idea first
 
-Before writing anything, invoke the `sdd-grill` skill to interrogate the idea and surface unknowns. Do not skip this — the grilling is what separates real requirements from guesses. Work the frontier until the user confirms a shared understanding.
+Before writing anything, invoke the `sdd-grill-with-docs` skill to interrogate the idea and surface unknowns. Do not skip this — the grilling is what separates real requirements from guesses. Work the frontier until the user confirms a shared understanding.
 
 ### 2. Fill the spec
 

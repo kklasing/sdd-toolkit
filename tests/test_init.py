@@ -10,7 +10,7 @@ EXPECTED = [
     ".sdd/memory/constitution.md",
     ".sdd/templates/spec-template.md",
     ".sdd/templates/tasks-template.md",
-    ".claude/skills/sdd-grill/SKILL.md",
+    ".claude/skills/sdd-grill-with-docs/SKILL.md",
     ".claude/skills/sdd-specify/SKILL.md",
     ".github/workflows/sdd.yml",
     ".github/pull_request_template.md",
