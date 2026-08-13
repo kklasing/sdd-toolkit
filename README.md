@@ -44,9 +44,15 @@ fills a strict template):
 | Skill          | Reads            | Writes                          |
 |----------------|------------------|---------------------------------|
 | `sdd-specify`  | your idea        | `spec.md` (`FR-###` requirements)|
+| ↳ `sdd-to-spec`| shared understanding | `spec.md` — explores the repo, fixes the testing seams, writes + validates it |
 | `sdd-plan`     | `spec.md`, constitution | `plan.md` (+ Constitution Check) |
 | `sdd-tasks`    | `plan.md`        | `tasks.md` (`T###` → `FR-###`)  |
 | `sdd-implement`| `tasks.md`, constitution | code + `T###:` commits, ticked tasks |
+
+`sdd-specify` composes two component skills: `sdd-grill-with-docs` (the
+interview) then `sdd-to-spec` (repo exploration, testing-seam identification, and
+writing + validating the spec). You can also invoke `sdd-to-spec` on its own to
+turn a design conversation you've already had into a spec, skipping the grilling.
 
 `sdd-implement` runs the build loop: it works through `tasks.md` task by task,
 dispatching subagents that build TDD-first (`sdd-tdd`) at agreed seams and
