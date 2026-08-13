@@ -23,7 +23,7 @@ This scaffolds (idempotently — re-runs preserve your edits):
   templates/                      # spec / plan / tasks / research / data-model / decisions / evidence
   sdd.manifest.json               # hash manifest for safe upgrades
 .claude/skills/
-  sdd-grill/  sdd-grill-with-docs/  sdd-domain-modeling/  sdd-tdd/  sdd-review/   # thinking skills
+  sdd-grill-with-docs/  sdd-domain-modeling/  sdd-tdd/  sdd-review/   # thinking skills
   sdd-specify/  sdd-plan/  sdd-tasks/                                             # artifact orchestration
 .github/
   workflows/sdd.yml               # runs `sdd lint` + `sdd trace-check`
