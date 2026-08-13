@@ -4,9 +4,9 @@
 > change (e.g. `sdd-review`). Edit for your repo.
 
 - **Tracker**: GitHub Issues
-- **Repo**: `kklasing/<repo>`
+- **Repo**: `{{REPO_SLUG}}`
 - **CLI**: `gh` (GitHub CLI) — e.g. `gh issue view <number>`
-- **API**: `https://api.github.com/repos/kklasing/<repo>/issues/<number>`
+- **API**: `https://api.github.com/repos/{{REPO_SLUG}}/issues/<number>`
 
 ## Conventions
 

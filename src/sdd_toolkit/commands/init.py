@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
 import typer
 from rich.console import Console
 
-from sdd_toolkit import _assets
+from sdd_toolkit import _assets, _repo
 from sdd_toolkit._repo import repo_root as find_repo_root
-from sdd_toolkit.manifest import Manifest, sha256
+from sdd_toolkit.manifest import Manifest, sha256_bytes
 
 console = Console()
 
@@ -22,6 +21,10 @@ LAYOUT: list[tuple[str, str]] = [
     ("github", ".github"),
     ("docs", "docs"),
 ]
+
+# Destination paths (repo-relative) whose {{TOKENS}} are rendered at install time.
+RENDERED_FILES = {"docs/agents/issue-tracker.md"}
+REPO_SLUG_FALLBACK = "<owner>/<repo>"
 
 
 def _iter_files(root: Path):
@@ -54,6 +57,11 @@ def init(
     manifest = Manifest.load(root)
     new_files = dict(manifest.files)
 
+    # Detect the target repo's remote so token-rendered files point at it, not
+    # at the toolkit's own repo. Falls back to a generic placeholder.
+    slug = _repo.remote_slug(root) or REPO_SLUG_FALLBACK
+    tokens = {"{{REPO_SLUG}}": slug}
+
     wrote: list[str] = []
     refreshed: list[str] = []
     skipped: list[str] = []
@@ -66,7 +74,14 @@ def init(
             rel_within = src_file.relative_to(src_root)
             rel = str(Path(dest_prefix) / rel_within)
             dest = root / rel
-            src_hash = sha256(src_file)
+
+            data = src_file.read_bytes()
+            if rel in RENDERED_FILES:
+                text = data.decode()
+                for key, value in tokens.items():
+                    text = text.replace(key, value)
+                data = text.encode()
+            content_hash = sha256_bytes(data)
             status = manifest.status(root, rel)
 
             if status == "modified" and not force:
@@ -74,8 +89,8 @@ def init(
                 continue
 
             dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src_file, dest)
-            new_files[rel] = src_hash
+            dest.write_bytes(data)
+            new_files[rel] = content_hash
             (refreshed if status == "pristine" else wrote).append(rel)
 
     # Ensure a place for feature folders to land.
