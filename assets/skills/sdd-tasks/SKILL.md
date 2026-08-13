@@ -33,6 +33,23 @@ Write tasks in dependency order — a task must appear after anything it depends
 - `Files:` lists the files the task creates or edits (source and tests).
 - Leave `Issue: #—` as a placeholder — ticket-sync is a later step.
 
+### Slice vertically, not horizontally
+
+Each task must be a **vertical slice**: a thin cut through every layer it needs
+to deliver one observable behaviour end-to-end, together with its test. This is
+what lets `sdd-implement` and `sdd-tdd` work a task red → green, one slice at a
+time. Getting this wrong here quietly defeats TDD downstream.
+
+- Prefer **one task per behaviour** (usually one — occasionally a few closely
+  related — `FR-###`). A task's `Files:` should therefore span the layers that
+  behaviour touches (e.g. handler + model + test), not a single layer.
+- **Do not slice by layer.** Tasks like "build all the models", "add every API
+  endpoint", or "write the whole UI" are horizontal — reject them.
+- **Do not split tests from implementation.** "Write all the tests" as one task
+  and "implement" as another is the horizontal anti-pattern `sdd-tdd` warns
+  against; each task carries its own test.
+- Order by dependency, but keep each unit shippable on its own.
+
 ### 3. Verify coverage
 
 Every `FR-###` in `spec.md` must appear in at least one task's `Traces:` line. Walk the FR list and confirm each is covered; add tasks for any that are orphaned.
