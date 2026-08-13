@@ -21,8 +21,12 @@ MANIFEST_RELPATH = Path(".sdd/sdd.manifest.json")
 
 
 def sha256(path: Path) -> str:
+    return sha256_bytes(path.read_bytes())
+
+
+def sha256_bytes(data: bytes) -> str:
     h = hashlib.sha256()
-    h.update(path.read_bytes())
+    h.update(data)
     return h.hexdigest()
 
 

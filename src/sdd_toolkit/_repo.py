@@ -64,3 +64,27 @@ def slugify(title: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
     slug = re.sub(r"-+", "-", slug)
     return slug or "feature"
+
+
+def parse_repo_slug(url: str) -> str | None:
+    """Parse `owner/repo` out of a git remote URL.
+
+    Handles the common forms: `git@github.com:owner/repo.git`,
+    `https://github.com/owner/repo(.git)`, `ssh://git@github.com/owner/repo`.
+    Returns None if it can't be parsed.
+    """
+    url = url.strip().rstrip("/")
+    if url.endswith(".git"):
+        url = url[:-4]
+    parts = [p for p in url.replace(":", "/").split("/") if p]
+    if len(parts) >= 2 and parts[-2] and parts[-1]:
+        return f"{parts[-2]}/{parts[-1]}"
+    return None
+
+
+def remote_slug(repo_root: Path, remote: str = "origin") -> str | None:
+    """`owner/repo` for the given remote, or None if there is no such remote."""
+    result = git(repo_root, "remote", "get-url", remote)
+    if result.returncode != 0:
+        return None
+    return parse_repo_slug(result.stdout.strip())

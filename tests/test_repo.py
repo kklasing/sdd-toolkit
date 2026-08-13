@@ -17,6 +17,15 @@ def test_feature_dir_regex():
     assert not _repo.FEATURE_DIR_RE.match("abc-user")
 
 
+def test_parse_repo_slug():
+    assert _repo.parse_repo_slug("git@github.com:acme/widgets.git") == "acme/widgets"
+    assert _repo.parse_repo_slug("https://github.com/acme/widgets.git") == "acme/widgets"
+    assert _repo.parse_repo_slug("https://github.com/acme/widgets") == "acme/widgets"
+    assert _repo.parse_repo_slug("ssh://git@github.com/acme/widgets.git") == "acme/widgets"
+    assert _repo.parse_repo_slug("https://github.com/acme/widgets/") == "acme/widgets"
+    assert _repo.parse_repo_slug("not-a-url") is None
+
+
 def test_next_feature_number(tmp_path: Path):
     specs = tmp_path / "specs"
     specs.mkdir()
