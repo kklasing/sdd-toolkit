@@ -11,7 +11,7 @@ Turn an approved `spec.md` into a `plan.md` — *how* the feature will be built,
 
 - **Feature folder exists.** Determine it from the current branch (`specs/NNN-slug/`; branch == folder). If it isn't there, run `sdd new "<title>"` first.
 - **Spec is approved.** Read `spec.md`. If it still contains unresolved `[NEEDS CLARIFICATION]` markers, stop and route back to `sdd-specify` — you cannot plan against an unsettled spec.
-- **Constitution available.** Confirm `.sdd/memory/constitution.md` exists (run `sdd init` if the toolkit isn't installed). The Constitution Check below is mandatory.
+- **Constitution available and authored.** Confirm `.sdd/memory/constitution.md` exists (run `sdd init` if the toolkit isn't installed). If it's still the untouched placeholder template (`<!-- … -->` comments, `## Governance` at `0.0.0`), route to the `sdd-constitution` skill to author it first — the Constitution Check below is mandatory and can't gate against placeholders.
 
 ## Outline
 

@@ -112,4 +112,8 @@ def init(
         console.print(
             "  [yellow]Skipped your edits[/] — re-run with [bold]--force[/] to overwrite."
         )
-    console.print("\nNext: [bold]sdd new \"<feature title>\"[/] to start a feature.")
+    console.print(
+        "\nNext: author your rules with the [bold]sdd-constitution[/] skill "
+        "(fills [cyan].sdd/memory/constitution.md[/]), then "
+        "[bold]sdd new \"<feature title>\"[/] to start a feature."
+    )

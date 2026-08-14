@@ -6,8 +6,9 @@
 >
 > These are your machine-checkable controls — the hooks for ISO/IEC 27001
 > Annex A change-management and secure-development controls (e.g. A.8.25,
-> A.8.27, A.8.28, A.8.32). **Edit this file to fit your project** before relying
-> on it; the placeholders below are a starting point, not law handed down.
+> A.8.27, A.8.28, A.8.32). **Don't edit the placeholders below by hand** — run
+> the `sdd-constitution` skill, which fills them from you and the repo, keeps the
+> `## Governance` version in step, and records a Sync Impact Report.
 
 ## 1. Module boundaries
 
@@ -47,3 +48,13 @@
 - Every change traces to a feature folder (`specs/NNN-slug/`) and its
   requirements (`FR-###`).
 - Commits carry their task id (`T###:`); the branch is the feature folder name.
+
+## Governance
+
+- **Version**: 0.0.0 <!-- Semantic. sdd-constitution bumps this on every ratified
+     change: MAJOR = a rule removed or redefined so prior passes could now fail;
+     MINOR = a rule/section added or materially expanded; PATCH = wording only. -->
+- **Ratified**: <!-- YYYY-MM-DD of first adoption; never changes once set -->
+- **Last amended**: <!-- YYYY-MM-DD; moves to today on any ratified change -->
+- **Amendments**: land via PR, reviewed against §5, and bump the version above.
+  `sdd-plan`'s Constitution Check is evaluated against this file as it stands.
