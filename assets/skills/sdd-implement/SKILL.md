@@ -9,7 +9,7 @@ Implement the tasks in the current feature's `tasks.md`, one traceable slice at 
 ## Orient
 
 1. Determine the feature folder from the current branch (`specs/NNN-slug/`; branch name == folder name). If you can't, ask which feature to build.
-2. Read the contract before writing code: `spec.md` (the `FR-###` requirements), `plan.md` (approach + the Constitution Check), `tasks.md` (the `T###` tasks with their `Traces:` and `Files:`), `.sdd/memory/constitution.md`, and `CONTEXT.md` if it exists (use its ubiquitous language).
+2. Read the contract before writing code: `spec.md` (the `FR-###` requirements), `plan.md` (approach + the Constitution Check), `tasks.md` (the `T###` tasks with their `Traces:` and `Files:`), `.sdd/memory/constitution.md`, and `.sdd/memory/context.md` if it exists (use its ubiquitous language).
 3. **Confirm the TDD seams with the user before any tests are written.** The `sdd-tdd` skill only tests at pre-agreed public boundaries — agree them once, up front, so the subagents don't each stop to re-ask.
 
 ## Implement, task by task

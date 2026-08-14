@@ -15,7 +15,7 @@ This skill changes **governance only** — the rules in the constitution and the
 
 - **Toolkit installed.** Confirm `.sdd/memory/constitution.md` exists. If not, run `sdd init` first — it renders the placeholder template. This skill *fills* that template; it doesn't create the file from nothing.
 - **Read what's there.** Load the current constitution. A fresh install is the placeholder template (HTML-comment `<!-- … -->` guidance, `## Governance` at version `0.0.0`); an established one carries real rules and a version — preserve both. This is an **edit in place**, never a rewrite from scratch.
-- **Gather sources.** Skim the repo for rules it already implies — `README`, `docs/adr/`, `CONTEXT.md`, the CI workflow, lockfile/allowlist conventions, the PR template's attestation, and any `docs/coding-standards.md` / Semgrep baseline set up by `sdd-setup-tooling-node`. These seed the rules so you interview the user about the *gaps*, not the obvious.
+- **Gather sources.** Skim the repo for rules it already implies — `README`, `docs/adr/`, `.sdd/memory/context.md`, the CI workflow, lockfile/allowlist conventions, the PR template's attestation, and any `docs/coding-standards.md` / Semgrep baseline set up by `sdd-setup-tooling-node`. These seed the rules so you interview the user about the *gaps*, not the obvious.
 
 ## Outline
 
