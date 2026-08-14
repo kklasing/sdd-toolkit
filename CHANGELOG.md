@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/kklasing/sdd-toolkit/compare/v0.2.1...v0.3.0) (2026-08-14)
+
+
+### Features
+
+* **trace-check:** accept task id in conventional commit scope ([c93d814](https://github.com/kklasing/sdd-toolkit/commit/c93d814d0fd7f2dd2e00b2610b462cf3e5896ac5))
+
+
+### Documentation
+
+* **skills:** delegate build/review to senior-role subagents, cap at 5 ([2f3018e](https://github.com/kklasing/sdd-toolkit/commit/2f3018ea51d0e40ce782c7d39d3872c6c7cc9a38))
+
 ## [0.2.1](https://github.com/kklasing/sdd-toolkit/compare/v0.2.0...v0.2.1) (2026-08-14)
 
 
