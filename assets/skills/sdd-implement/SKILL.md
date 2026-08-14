@@ -4,7 +4,7 @@ description: Implement a feature's tasks from tasks.md — TDD-first, subagent-d
 disable-model-invocation: true
 ---
 
-Implement the tasks in the current feature's `tasks.md`, one traceable slice at a time, using subagents for development and review wherever the work can run in parallel.
+Implement the tasks in the current feature's `tasks.md`, one traceable slice at a time. Development and review are always delegated to subagents — a **senior software developer** writes the code, a **senior code reviewer** reviews it. Fan the work out in parallel wherever it's safe, running **at most 5 subagents concurrently**.
 
 ## Orient
 
@@ -18,9 +18,9 @@ Work tasks in the order listed; respect dependencies. Independent tasks may run 
 
 For each task `T###`:
 
-- **Dispatch a subagent** to implement just that task, scoped to its `Files:` and the requirements named in its `Traces:`. Tell it to follow the `sdd-tdd` skill (red → green at the agreed seams, one vertical slice at a time) and to not expand scope beyond the task. **Prefix the subagent's description with the task id** — e.g. `T012: implement the login form` — so token usage can later be attributed back to the task (see _Report token usage_).
+- **Dispatch a subagent — briefed as a senior software developer** — to implement just that task, scoped to its `Files:` and the requirements named in its `Traces:`. Tell it to follow the `sdd-tdd` skill (red → green at the agreed seams, one vertical slice at a time) and to not expand scope beyond the task. **Prefix the subagent's description with the task id** — e.g. `T012: implement the login form` — so token usage can later be attributed back to the task (see _Report token usage_).
 - **Guard the slice.** A well-formed task is already a vertical slice (one behaviour through its layers, with its test). If you find a task that is actually a horizontal layer or splits tests from implementation, stop and fix `tasks.md` (re-slice it) before building — don't let the subagent build it flat.
-- **Fan out where it's safe:** tasks whose `Files:` don't overlap can run in parallel subagents; tasks that touch the same files run sequentially to avoid conflicts.
+- **Fan out where it's safe:** tasks whose `Files:` don't overlap can run in parallel subagents; tasks that touch the same files run sequentially to avoid conflicts. Keep **no more than 5 subagents running at once** — queue the rest and dispatch them as slots free up.
 - **On return, verify locally:** run typechecking and the task's relevant test file. If it's red, fix it or bounce it back to the subagent until green.
 - **Commit on the current branch** carrying the task id, either as a bare prefix `T###: <subject>` or inside a Conventional Commit scope `type(T###): <subject>` (e.g. `feat(T012): wire up login`) — the scope form satisfies both `sdd trace-check` and release automation. This is exactly what `sdd trace-check` verifies.
 - **Update state:** tick the task in `tasks.md` (`- [ ]` → `- [x]`). If you deviated from the plan, record it in the feature's `decisions.md` (and promote it to an ADR via `sdd-domain-modeling` if it's architecturally significant).
@@ -41,7 +41,7 @@ Give the run a cost record: how many tokens each task burned and which model did
 
 ## Review
 
-- Invoke the `sdd-review` skill on this branch's changes. It fans out parallel review subagents across two axes — **Standards** (point it at `.sdd/memory/constitution.md` and any repo coding standards) and **Spec** (does the code actually satisfy the `FR-###` its tasks trace to).
+- Invoke the `sdd-review` skill on this branch's changes. It fans out parallel review subagents — each briefed as a **senior code reviewer** — across two axes — **Standards** (point it at `.sdd/memory/constitution.md` and any repo coding standards) and **Spec** (does the code actually satisfy the `FR-###` its tasks trace to). Hold to the same **5-subagent concurrency cap**.
 - Triage the findings: fix what's real as further `T###`-prefixed commits (or a follow-up task), and record anything consciously deferred in `decisions.md`.
 
 The feature is done when the full suite passes, both gates pass, and every review finding is either fixed or deliberately deferred with a note.
