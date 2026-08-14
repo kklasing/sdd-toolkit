@@ -33,6 +33,31 @@ docs/agents/issue-tracker.md      # config consumed by sdd-review
 specs/                            # feature folders land here
 ```
 
+## Updating an existing install
+
+`sdd init` is the upgrade path — re-run the same command to pull the latest
+templates, skills, and workflow into a repo that already has the toolkit:
+
+```bash
+uvx --from git+https://github.com/kklasing/sdd-toolkit sdd init --here
+```
+
+It's manifest-guarded, so a re-run is safe:
+
+- **unchanged toolkit files** are refreshed to the new version;
+- **files you've edited** (constitution, and anything else you've touched) are
+  left alone and reported as skipped — add `--force` to overwrite them;
+- the run prints the version transition (e.g. `0.1.0 → 0.2.0`).
+
+Check what you're on at any time:
+
+```bash
+sdd version   # CLI version + the contract version stamped in this repo's manifest
+```
+
+When the two differ, a re-run of `sdd init` brings the repo's contract up to the
+CLI you're invoking. Pin a specific release by appending `@vX.Y.Z` to the git URL.
+
 ## Set up once: the constitution
 
 `sdd init` drops a **placeholder** `constitution.md` — the machine-checked rules
@@ -178,3 +203,14 @@ uv run pytest
 Assets live in `assets/` and are bundled into the wheel at
 `sdd_toolkit/core_pack/` (see `pyproject.toml`). The CLI resolves the bundled
 pack when installed, or `assets/` when run from a source checkout.
+
+### Releases
+
+Versioning is automated with
+[release-please](https://github.com/googleapis/release-please). Commit with
+[Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`,
+`feat!:`/`BREAKING CHANGE:`) and, on every push to `main`, the action maintains a
+**release PR** that bumps `version` in `pyproject.toml` and updates
+`CHANGELOG.md`. Merging that PR tags the commit and publishes the GitHub Release —
+no manual version edits. The version release-please stamps is what `sdd version`
+and the install manifest report.

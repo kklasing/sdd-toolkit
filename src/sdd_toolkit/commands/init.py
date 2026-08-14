@@ -100,10 +100,20 @@ def init(
     if not any(specs.iterdir()):
         gitkeep.touch()
 
+    previous_version = manifest.version
+    current_version = _assets.version()
     manifest.files = new_files
-    manifest.save(root, _assets.version())
+    manifest.save(root, current_version)
 
-    console.print(f"[bold green]sdd-toolkit[/] installed into [cyan]{root}[/]")
+    if not previous_version:
+        version_note = f"version [bold]{current_version}[/]"
+    elif previous_version == current_version:
+        version_note = f"version [bold]{current_version}[/] (refreshed)"
+    else:
+        version_note = f"[bold]{previous_version}[/] → [bold]{current_version}[/]"
+    console.print(
+        f"[bold green]sdd-toolkit[/] {version_note} installed into [cyan]{root}[/]"
+    )
     console.print(
         f"  {len(wrote)} written, {len(refreshed)} refreshed, "
         f"{len(skipped)} skipped (locally modified)"
