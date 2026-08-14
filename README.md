@@ -19,18 +19,28 @@ This scaffolds (idempotently — re-runs preserve your edits):
 
 ```
 .sdd/
-  memory/constitution.md          # your machine-checked rules (edit this first)
+  memory/constitution.md          # your machine-checked rules (author via sdd-constitution)
   templates/                      # spec / plan / tasks / research / data-model / decisions / evidence
   sdd.manifest.json               # hash manifest for safe upgrades
 .claude/skills/
   sdd-grill-with-docs/  sdd-domain-modeling/  sdd-to-spec/  sdd-tdd/  sdd-review/   # thinking skills
-  sdd-specify/  sdd-plan/  sdd-tasks/  sdd-implement/                             # artifact orchestration
+  sdd-constitution/  sdd-specify/  sdd-plan/  sdd-tasks/  sdd-implement/           # artifact orchestration
 .github/
   workflows/sdd.yml               # runs `sdd lint` + `sdd trace-check`
   pull_request_template.md        # human-reviewer attestation
 docs/agents/issue-tracker.md      # config consumed by sdd-review
 specs/                            # feature folders land here
 ```
+
+## Set up once: the constitution
+
+`sdd init` drops a **placeholder** `constitution.md` — the machine-checked rules
+`sdd-plan` gates every plan against. Before your first feature, author it with the
+`sdd-constitution` skill: it fills the placeholders from you and the repo, makes
+each rule declarative and testable, and stamps a semantic version + Sync Impact
+Report into the `## Governance` block. Re-run it whenever the rules change — it
+versions amendments (MAJOR/MINOR/PATCH) rather than silently editing law. This is
+a project-level step, not per-feature; the per-feature loop below assumes it's done.
 
 ## The loop
 
