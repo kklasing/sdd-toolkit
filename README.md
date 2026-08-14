@@ -78,15 +78,30 @@ When the two differ, a re-run of `sdd init` brings the repo's contract up to the
 CLI you're invoking. Pin a specific release with
 `uv tool install git+https://github.com/kklasing/sdd-toolkit@vX.Y.Z`.
 
-## Set up once: the constitution
+## Set up once: the project foundations
 
-`sdd init` drops a **placeholder** `constitution.md` — the machine-checked rules
-`sdd-plan` gates every plan against. Before your first feature, author it with the
-`sdd-constitution` skill: it fills the placeholders from you and the repo, makes
-each rule declarative and testable, and stamps a semantic version + Sync Impact
-Report into the `## Governance` block. Re-run it whenever the rules change — it
-versions amendments (MAJOR/MINOR/PATCH) rather than silently editing law. This is
-a project-level step, not per-feature; the per-feature loop below assumes it's done.
+Two project-level artifacts live side by side under `.sdd/memory/` and are read
+throughout the loop — the **constitution** (the rules) and the **glossary** (the
+vocabulary). Both are cross-cutting and project-scoped, but they have different
+lifecycles: the constitution is versioned *law* you gate against; the glossary is a
+*living reference* you consume.
+
+**`.sdd/memory/constitution.md` — the rules.** `sdd init` drops a **placeholder**
+constitution — the machine-checked rules `sdd-plan` gates every plan against.
+Before your first feature, author it with the `sdd-constitution` skill: it fills the
+placeholders from you and the repo, makes each rule declarative and testable, and
+stamps a semantic version + Sync Impact Report into the `## Governance` block.
+Re-run it whenever the rules change — it versions amendments (MAJOR/MINOR/PATCH)
+rather than silently editing law. This is a project-level step, not per-feature; the
+per-feature loop below assumes it's done.
+
+**`.sdd/memory/context.md` — the glossary.** The project's ubiquitous language: a
+tight glossary of domain terms that keeps `spec.md`, `data-model.md`, tests, and
+code speaking the same words. Unlike the constitution it isn't scaffolded or gated —
+the `sdd-domain-modeling` skill creates and sharpens it **lazily**, writing a term
+down the moment it's resolved during grilling or planning. Multi-context repos swap
+it for a `.sdd/memory/context-map.md` pointing at per-module `src/*/context.md`
+glossaries. Read for vocabulary everywhere; never a spec or a scratch pad.
 
 **Node.js projects (optional):** `sdd-setup-tooling-node` bootstraps the baseline
 dev tooling — ESLint (flat config) + Prettier, Husky hooks, commitlint, release-please,

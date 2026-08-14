@@ -26,7 +26,7 @@ The session is done when the frontier is empty: every branch of the design tree 
 
 Use the `sdd-domain-modeling` skill throughout, not just at the end:
 
-- When the grilling sharpens a fuzzy term or settles a naming conflict, record it in the project glossary (`CONTEXT.md`).
+- When the grilling sharpens a fuzzy term or settles a naming conflict, record it in the project glossary (`.sdd/memory/context.md`).
 - When a round produces a decision that is hard to reverse, surprising, and a real trade-off, offer to write an ADR under `docs/adr/` — don't manufacture ADRs for routine choices.
 
 Keep the docs a by-product of the interview, written lazily and only when there is something worth writing.

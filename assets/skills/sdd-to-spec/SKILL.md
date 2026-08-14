@@ -17,7 +17,7 @@ Turn an already-shared understanding — the outcome of a grilling session or a 
 
 ### 1. Explore the repository
 
-Examine the current codebase state relevant to this feature. Apply the ubiquitous language from `CONTEXT.md`, and respect any ADRs under `docs/adr/` that touch this area. The spec must fit the system that exists, not an imagined one.
+Examine the current codebase state relevant to this feature. Apply the ubiquitous language from `.sdd/memory/context.md`, and respect any ADRs under `docs/adr/` that touch this area. The spec must fit the system that exists, not an imagined one.
 
 ### 2. Identify the testing seams
 
@@ -28,7 +28,7 @@ Map where this feature will be tested. Prefer **existing** seams over new ones, 
 Write into `spec.md` using the template's section order (Summary, Goals, Non-goals, Functional requirements, Non-functional requirements, User scenarios, Assumptions, Open questions):
 
 - Each functional requirement is `- **FR-001**: <testable requirement>`, numbered sequentially and zero-padded to three digits. Every FR must trace to something actually discussed — **invent nothing**.
-- Fill **User scenarios** (Given/When/Then). Identify **key entities** (using `CONTEXT.md` terms) for `data-model.md` downstream.
+- Fill **User scenarios** (Given/When/Then). Identify **key entities** (using `.sdd/memory/context.md` terms) for `data-model.md` downstream.
 - **Make informed guesses** for minor unspecified details and record them under **Assumptions** rather than asking. Reserve `[NEEDS CLARIFICATION: <specific question>]` for genuine forks only — **maximum 3 markers**, prioritised by impact: scope > security/privacy > user experience > technical detail.
 - Keep the spec about *what* and *why*, never *how*. Remove template sections that don't apply.
 

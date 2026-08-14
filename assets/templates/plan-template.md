@@ -20,7 +20,7 @@
 
 ## Data model
 
-<!-- Summarise or link to data-model.md. Reference domain terms from CONTEXT.md. -->
+<!-- Summarise or link to data-model.md. Reference domain terms from .sdd/memory/context.md. -->
 
 ## Research
 

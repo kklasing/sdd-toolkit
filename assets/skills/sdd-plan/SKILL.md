@@ -40,8 +40,8 @@ For each unknown in the technical context, each remaining `[NEEDS CLARIFICATION]
 
 **Prerequisite**: `research.md` complete.
 
-- **Sharpen the domain first.** If the feature introduces or reshapes domain terminology, invoke `sdd-domain-modeling` to pin down the ubiquitous language in `CONTEXT.md` and record any hard, surprising trade-off as an ADR — *before* writing the data model.
-- **Entities → `data-model.md`.** Fields, relationships, validation rules from the requirements, state transitions, and the data class per the constitution — named with `CONTEXT.md` terms.
+- **Sharpen the domain first.** If the feature introduces or reshapes domain terminology, invoke `sdd-domain-modeling` to pin down the ubiquitous language in `.sdd/memory/context.md` and record any hard, surprising trade-off as an ADR — *before* writing the data model.
+- **Entities → `data-model.md`.** Fields, relationships, validation rules from the requirements, state transitions, and the data class per the constitution — named with `.sdd/memory/context.md` terms.
 - **Interfaces → `contracts/`.** If the feature exposes an interface (API endpoints, CLI commands, a library surface), document the contract there. Skip if the feature is purely internal.
 
 **Output**: `data-model.md`, `contracts/*` (as warranted).

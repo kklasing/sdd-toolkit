@@ -1,4 +1,4 @@
-# CONTEXT.md Format
+# context.md Format
 
 ## Structure
 
@@ -31,18 +31,18 @@ _Avoid_: Client, buyer, account
 
 ## Single vs multi-context repos
 
-**Single context (most repos):** One `CONTEXT.md` at the repo root.
+**Single context (most repos):** One `.sdd/memory/context.md`.
 
-**Multiple contexts:** A `CONTEXT-MAP.md` at the repo root lists the contexts, where they live, and how they relate to each other:
+**Multiple contexts:** A `.sdd/memory/context-map.md` lists the contexts, where they live, and how they relate to each other. The per-context glossaries stay local to their modules under `src/`:
 
 ```md
 # Context Map
 
 ## Contexts
 
-- [Ordering](./src/ordering/CONTEXT.md) — receives and tracks customer orders
-- [Billing](./src/billing/CONTEXT.md) — generates invoices and processes payments
-- [Fulfillment](./src/fulfillment/CONTEXT.md) — manages warehouse picking and shipping
+- [Ordering](../../src/ordering/context.md) — receives and tracks customer orders
+- [Billing](../../src/billing/context.md) — generates invoices and processes payments
+- [Fulfillment](../../src/fulfillment/context.md) — manages warehouse picking and shipping
 
 ## Relationships
 
@@ -53,8 +53,8 @@ _Avoid_: Client, buyer, account
 
 The skill infers which structure applies:
 
-* If `CONTEXT-MAP.md` exists, read it to find contexts
-* If only a root `CONTEXT.md` exists, single context
-* If neither exists, create a root `CONTEXT.md` lazily when the first term is resolved
+* If `.sdd/memory/context-map.md` exists, read it to find contexts
+* If only `.sdd/memory/context.md` exists, single context
+* If neither exists, create `.sdd/memory/context.md` lazily when the first term is resolved
 
 When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.

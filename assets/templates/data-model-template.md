@@ -4,7 +4,7 @@
 - **Created**: {{DATE}}
 
 > Optional. Entities, fields, relationships and lifecycle for this feature. Use
-> the ubiquitous language from `CONTEXT.md` — if a term is missing or fuzzy,
+> the ubiquitous language from `.sdd/memory/context.md` — if a term is missing or fuzzy,
 > sharpen it there via `sdd-domain-modeling` before modelling here.
 
 ## Entities
