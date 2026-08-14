@@ -6,6 +6,7 @@ Subcommands:
     sdd lint          gate: required files, FR coverage, no open clarifications
     sdd trace-check   gate: branch commits carry T### task IDs
     sdd token-report  roll subagent token/model usage into a CSV
+    sdd version       show the CLI version and the contract installed here
 """
 
 from __future__ import annotations
@@ -17,6 +18,7 @@ from sdd_toolkit.commands import lint as lint_cmd
 from sdd_toolkit.commands import new as new_cmd
 from sdd_toolkit.commands import token_report as token_report_cmd
 from sdd_toolkit.commands import trace_check as trace_cmd
+from sdd_toolkit.commands import version as version_cmd
 
 app = typer.Typer(
     help="Spec-driven development toolkit.",
@@ -29,6 +31,7 @@ app.command("new")(new_cmd.new)
 app.command("lint")(lint_cmd.lint)
 app.command("trace-check")(trace_cmd.trace_check)
 app.command("token-report")(token_report_cmd.token_report)
+app.command("version")(version_cmd.version)
 
 
 def main() -> None:
