@@ -23,8 +23,9 @@ This scaffolds (idempotently — re-runs preserve your edits):
   templates/                      # spec / plan / tasks / research / data-model / decisions / evidence
   sdd.manifest.json               # hash manifest for safe upgrades
 .claude/skills/
-  sdd-grill-with-docs/  sdd-domain-modeling/  sdd-to-spec/  sdd-tdd/  sdd-review/   # thinking skills
-  sdd-constitution/  sdd-specify/  sdd-plan/  sdd-tasks/  sdd-implement/           # artifact orchestration
+  sdd-grill-with-docs/  sdd-domain-modeling/  sdd-to-spec/                          # thinking skills
+  sdd-constitution/  sdd-specify/  sdd-plan/  sdd-tasks/                            # artifact orchestration
+  sdd-tdd/  sdd-review/  sdd-implement/                                             # implementation
   sdd-setup-tooling-node/                                                          # optional · Node.js project bootstrap
 .github/
   workflows/sdd.yml               # runs `sdd lint` + `sdd trace-check`
