@@ -25,6 +25,7 @@ This scaffolds (idempotently — re-runs preserve your edits):
 .claude/skills/
   sdd-grill-with-docs/  sdd-domain-modeling/  sdd-to-spec/  sdd-tdd/  sdd-review/   # thinking skills
   sdd-constitution/  sdd-specify/  sdd-plan/  sdd-tasks/  sdd-implement/           # artifact orchestration
+  sdd-setup-tooling-node/                                                          # optional · Node.js project bootstrap
 .github/
   workflows/sdd.yml               # runs `sdd lint` + `sdd trace-check`
   pull_request_template.md        # human-reviewer attestation
@@ -41,6 +42,14 @@ each rule declarative and testable, and stamps a semantic version + Sync Impact
 Report into the `## Governance` block. Re-run it whenever the rules change — it
 versions amendments (MAJOR/MINOR/PATCH) rather than silently editing law. This is
 a project-level step, not per-feature; the per-feature loop below assumes it's done.
+
+**Node.js projects (optional):** `sdd-setup-tooling-node` bootstraps the baseline
+dev tooling — ESLint (flat config) + Prettier, Husky hooks, commitlint, release-please,
+GitHub CI, Dependabot, Semgrep and a coding-standards index against the Sunbytes
+`engineering-standards` baseline, `fallow` codebase intelligence, and a Vitest +
+Playwright test stack. It's language-specific (the rest of the toolkit is
+language-agnostic) and orthogonal to the loop — run it once when bootstrapping a
+Node.js repo, or skip it entirely.
 
 ## The loop
 
