@@ -6,15 +6,27 @@ machine-checked gates — on top of a set of reusable reasoning skills (grilling
 domain modelling, TDD, review). Consistency stops being a model behaviour and becomes a
 property of templates + scripts.
 
-Installed via a `uv`-run CLI that scaffolds itself into an existing repo.
+Installed as a `uv` tool — a `sdd` CLI that scaffolds itself into an existing repo.
 
 ## Install into an existing repo
 
+Install the `sdd` CLI once (persistently, so the skills and gates can call it),
+then scaffold it into your repo:
+
 ```bash
-uvx --from git+https://github.com/kklasing/sdd-toolkit sdd init --here
+uv tool install git+https://github.com/kklasing/sdd-toolkit
+uv tool update-shell   # first time only: puts ~/.local/bin on PATH (restart your shell after)
+
+cd your-repo
+sdd init --here
 ```
 
-This scaffolds (idempotently — re-runs preserve your edits):
+Use `uv tool install`, not `uvx`: the toolkit's skills (`sdd-specify`, `sdd-plan`,
+…) and gates invoke `sdd new` / `sdd lint` / `sdd trace-check` throughout the loop,
+so `sdd` has to stay on your PATH. `uvx` only runs a command once and discards the
+environment — fine for a one-off, but it never installs `sdd`.
+
+`sdd init` scaffolds (idempotently — re-runs preserve your edits):
 
 ```
 .sdd/
@@ -35,11 +47,18 @@ specs/                            # feature folders land here
 
 ## Updating an existing install
 
-`sdd init` is the upgrade path — re-run the same command to pull the latest
-templates, skills, and workflow into a repo that already has the toolkit:
+Updating is two steps: upgrade the CLI, then re-scaffold the repo. First pull the
+latest `sdd`:
 
 ```bash
-uvx --from git+https://github.com/kklasing/sdd-toolkit sdd init --here
+uv tool upgrade sdd-toolkit
+```
+
+Then re-run `sdd init` in a repo that already has the toolkit to refresh its
+templates, skills, and workflow:
+
+```bash
+sdd init --here
 ```
 
 It's manifest-guarded, so a re-run is safe:
@@ -56,7 +75,8 @@ sdd version   # CLI version + the contract version stamped in this repo's manife
 ```
 
 When the two differ, a re-run of `sdd init` brings the repo's contract up to the
-CLI you're invoking. Pin a specific release by appending `@vX.Y.Z` to the git URL.
+CLI you're invoking. Pin a specific release with
+`uv tool install git+https://github.com/kklasing/sdd-toolkit@vX.Y.Z`.
 
 ## Set up once: the constitution
 
