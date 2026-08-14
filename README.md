@@ -204,7 +204,7 @@ traced, stepping back is cheap: edit the earlier file and re-run forward.
 
 ```bash
 sdd lint          # required files exist · every FR covered by ≥1 task · no open [NEEDS CLARIFICATION]
-sdd trace-check   # every branch commit is prefixed with its task id (T###:)
+sdd trace-check   # every branch commit carries its task id (T###: or feat(T###):)
 ```
 
 Both run in CI via `.github/workflows/sdd.yml`. They are the enforcement layer —
@@ -212,8 +212,8 @@ skills only bias, gates decide.
 
 ## The trace
 
-`FR-###` (spec) → `T###` (task, with file paths) → `T###:` commit prefix →
-branch = feature folder. An auditor asking "where was requirement X specified,
+`FR-###` (spec) → `T###` (task, with file paths) → `T###:` (or `feat(T###):`)
+commit → branch = feature folder. An auditor asking "where was requirement X specified,
 implemented, tested and reviewed?" gets a grep, not a story.
 
 ## Two-tier decisions

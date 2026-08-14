@@ -47,7 +47,8 @@
 
 - Every change traces to a feature folder (`specs/NNN-slug/`) and its
   requirements (`FR-###`).
-- Commits carry their task id (`T###:`); the branch is the feature folder name.
+- Commits carry their task id — as a bare `T###:` prefix or a Conventional
+  Commit scope `type(T###):` — and the branch is the feature folder name.
 
 ## Governance
 
