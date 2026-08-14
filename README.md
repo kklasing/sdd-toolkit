@@ -4,10 +4,9 @@ A spec-driven development toolkit for Claude Code. It adds an **artifact
 contract** — feature folders, template-rendered documents, trace IDs, and
 machine-checked gates — on top of a set of reusable reasoning skills (grilling,
 domain modelling, TDD, review). Consistency stops being a model behaviour and becomes a
-property of templates + scripts, the way GitHub's Spec Kit does it.
+property of templates + scripts.
 
-Installed the same way as Spec Kit: a `uv`-run CLI that scaffolds itself into an
-existing repo.
+Installed via a `uv`-run CLI that scaffolds itself into an existing repo.
 
 ## Install into an existing repo
 
