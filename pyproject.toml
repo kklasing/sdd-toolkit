@@ -1,6 +1,6 @@
 [project]
 name = "sdd-toolkit"
-version = "0.2.0"
+version = "0.2.1"
 description = "Spec-driven development toolkit: an artifact contract (feature folders, trace IDs, gates) on top of Claude Code thinking skills."
 readme = "README.md"
 requires-python = ">=3.11"
