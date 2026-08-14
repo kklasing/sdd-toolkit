@@ -1,0 +1,14 @@
+# Enforces Conventional Commits (https://www.conventionalcommits.org) on every
+# commit message, so release-please can generate correct changelogs.
+#
+# Enable it once in your clone:
+#   uv run --extra dev pre-commit install --hook-type commit-msg
+#
+# After that, `git commit` rejects any message that isn't a valid Conventional
+# Commit (feat, fix, docs, chore, refactor, test, build, ci, perf, style, revert…).
+repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]

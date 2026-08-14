@@ -235,6 +235,16 @@ uv venv && uv pip install -e ".[test]"
 uv run pytest
 ```
 
+Enable the commit-message hook once per clone so your commits stay Conventional
+Commits (required for correct changelogs — see [Releases](#releases)):
+
+```bash
+uv run --extra dev pre-commit install --hook-type commit-msg
+```
+
+After that, `git commit` rejects any message that isn't a valid Conventional
+Commit. The rule set is `.pre-commit-config.yaml`.
+
 Assets live in `assets/` and are bundled into the wheel at
 `sdd_toolkit/core_pack/` (see `pyproject.toml`). The CLI resolves the bundled
 pack when installed, or `assets/` when run from a source checkout.
