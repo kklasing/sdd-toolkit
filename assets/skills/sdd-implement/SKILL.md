@@ -22,7 +22,7 @@ For each task `T###`:
 - **Guard the slice.** A well-formed task is already a vertical slice (one behaviour through its layers, with its test). If you find a task that is actually a horizontal layer or splits tests from implementation, stop and fix `tasks.md` (re-slice it) before building — don't let the subagent build it flat.
 - **Fan out where it's safe:** tasks whose `Files:` don't overlap can run in parallel subagents; tasks that touch the same files run sequentially to avoid conflicts.
 - **On return, verify locally:** run typechecking and the task's relevant test file. If it's red, fix it or bounce it back to the subagent until green.
-- **Commit on the current branch** with the task id as the subject prefix: `T###: <subject>`. This is exactly what `sdd trace-check` verifies.
+- **Commit on the current branch** carrying the task id, either as a bare prefix `T###: <subject>` or inside a Conventional Commit scope `type(T###): <subject>` (e.g. `feat(T012): wire up login`) — the scope form satisfies both `sdd trace-check` and release automation. This is exactly what `sdd trace-check` verifies.
 - **Update state:** tick the task in `tasks.md` (`- [ ]` → `- [x]`). If you deviated from the plan, record it in the feature's `decisions.md` (and promote it to an ADR via `sdd-domain-modeling` if it's architecturally significant).
 
 ## Verify the whole

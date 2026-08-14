@@ -1,7 +1,14 @@
 """`sdd trace-check` — the trace gate.
 
-Every non-merge commit on the feature branch (base..HEAD) must be prefixed with
-its task id, e.g. `T012: wire up the login form`. When the branch matches a
+Every non-merge commit on the feature branch (base..HEAD) must carry its task
+id. Two forms are accepted:
+
+* a bare task prefix — `T012: wire up the login form`; or
+* a Conventional Commit whose scope carries the task id —
+  `feat(T012): wire up the login form` (also `fix(T012)!: …`).
+
+The second form lets a single commit satisfy both this gate and Conventional
+Commit tooling (release-please, changelog generation). When the branch matches a
 feature folder, referenced task ids are also checked against tasks.md.
 """
 
@@ -17,13 +24,31 @@ from sdd_toolkit import _repo
 
 console = Console()
 
+# Bare prefix: `T012: …`.
 COMMIT_TASK_RE = re.compile(r"^(T\d+):")
+# Conventional Commit header — `type(scope)!: …` — capturing the scope, if any.
+CONVENTIONAL_RE = re.compile(r"^[a-z]+(?:\(([^)]+)\))?!?:", re.IGNORECASE)
+# A task id anywhere inside a conventional scope, e.g. `T012` in `auth,T012`.
+SCOPE_TASK_RE = re.compile(r"\b(T\d+)\b")
 TASK_DEFINITION_RE = re.compile(r"\*\*(T\d+)\*\*")
 
 
 def commit_task_id(subject: str) -> str | None:
-    match = COMMIT_TASK_RE.match(subject.strip())
-    return match.group(1) if match else None
+    """Return the task id carried by a commit subject, or None.
+
+    Accepts a bare `T012:` prefix or a Conventional Commit whose scope contains
+    the task id (`feat(T012): …`, `fix(T012)!: …`).
+    """
+    subject = subject.strip()
+    bare = COMMIT_TASK_RE.match(subject)
+    if bare:
+        return bare.group(1)
+    conventional = CONVENTIONAL_RE.match(subject)
+    if conventional and conventional.group(1):
+        scope_task = SCOPE_TASK_RE.search(conventional.group(1))
+        if scope_task:
+            return scope_task.group(1)
+    return None
 
 
 def _resolve_base(root: Path, base: str | None) -> str | None:
@@ -84,7 +109,10 @@ def trace_check(
             unknown.append(f"{sha[:8]}  {task_id} not defined in tasks.md — {subject}")
 
     if violations:
-        console.print(f"[bold red]✗ commits missing a T### prefix[/] (base {base_ref}):")
+        console.print(
+            f"[bold red]✗ commits missing a task id[/] (base {base_ref}) — "
+            "use [cyan]T###:[/] or [cyan]type(T###):[/]:"
+        )
         for item in violations:
             console.print(f"    [red]•[/] {item}")
     for item in unknown:

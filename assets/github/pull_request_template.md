@@ -11,7 +11,7 @@
 
 ## Traceability
 
-- [ ] Every commit is prefixed with its task id (`T###:`) — `sdd trace-check` passes
+- [ ] Every commit carries its task id (`T###:` or `type(T###):`) — `sdd trace-check` passes
 - [ ] `sdd lint` passes (required files present, all FRs covered, no open clarifications)
 - [ ] Deviations from the plan are recorded in `decisions.md`
 
