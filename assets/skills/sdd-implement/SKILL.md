@@ -34,7 +34,7 @@ For each task `T###`:
 
 Give the run a cost record: how many tokens each task burned and which model did the work.
 
-- Run `sdd token-report` once the implementation subagents have finished (before or after review — reviews count too). It reads Claude Code's own transcripts for this session, rolls up **real** `usage` and `model`, adds an **estimated USD cost** per task (list prices; cache writes 1.25× input, reads 0.1×), and writes `specs/NNN-slug/token-usage.csv` (opens directly in Excel). It also prints a per-task summary table. Costs are estimates — models with no known rate are left uncosted rather than guessed.
+- Run `sdd token-report` once the implementation subagents have finished (before or after review — reviews count too). It reads Claude Code's own transcripts for this session, rolls up **real** `usage` and `model`, and writes `specs/NNN-slug/token-usage.csv` (opens directly in Excel). It also prints a per-task summary table.
 - The CSV has one row per subagent plus a final **orchestrator** row — the main-session (your own) tokens, which aren't per-task, attributed to the spec as a whole (the `task` column carries the feature reference). Pass `--no-orchestrator` to report subagents only.
 - Per-task attribution depends on the `T###`-prefixed descriptions you dispatched with — subagents without a task id in their description are still reported, grouped under their raw description. Don't hand-estimate token counts; the numbers come from the transcript, not from you.
 - If the report lands in the wrong feature folder or session, scope it explicitly: `sdd token-report --feature NNN-slug --session <id> --out <path>`.

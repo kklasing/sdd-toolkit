@@ -5,13 +5,9 @@ Claude Code records every subagent it spawns under
 an `agent-*.jsonl` transcript (real per-message `usage` and `model`) and an
 `agent-*.meta.json` sidecar (the `description` the orchestrator dispatched it
 with, plus its `agentType`). This command rolls those up into a CSV — one row
-per subagent — of tokens-per-task, which model ran each task, and an estimated
-USD cost, plus a final orchestrator row for the main session's own (not-per-task)
-tokens, attributed to the spec. The CSV opens natively in Excel / Sheets.
-
-Cost is an estimate at Anthropic list prices (see PRICING): cache writes bill at
-1.25x the input rate and cache reads at 0.1x. Models with no known rate are left
-uncosted rather than guessed.
+per subagent — of tokens-per-task and which model ran each task, plus a final
+orchestrator row for the main session's own (not-per-task) tokens, attributed to
+the spec. The CSV opens natively in Excel / Sheets.
 
 Attribution to a task relies on each implementation subagent being dispatched
 with a `T###`-prefixed description, which the `sdd-implement` skill instructs.
@@ -48,46 +44,9 @@ CSV_COLUMNS = (
     "cache_read_tokens",
     "output_tokens",
     "total_tokens",
-    "cost_usd",
     "started",
     "agent_id",
 )
-
-# Published Anthropic list prices in USD per million tokens, as (input, output).
-# Cache writes bill at 1.25x input (5-minute TTL, the Claude Code default) and
-# cache reads at 0.1x input. Update these when rates change; unknown models get
-# no cost estimate rather than a wrong one.
-PRICING: dict[str, tuple[float, float]] = {
-    "claude-opus-5": (5.0, 25.0),
-    "claude-opus-4-8": (5.0, 25.0),
-    "claude-opus-4-7": (5.0, 25.0),
-    "claude-opus-4-6": (5.0, 25.0),
-    "claude-opus-4-5": (5.0, 25.0),
-    "claude-fable-5": (10.0, 50.0),
-    "claude-mythos-5": (10.0, 50.0),
-    "claude-sonnet-5": (3.0, 15.0),
-    "claude-sonnet-4-6": (3.0, 15.0),
-    "claude-sonnet-4-5": (3.0, 15.0),
-    "claude-haiku-4-5": (1.0, 5.0),
-}
-CACHE_WRITE_MULT = 1.25
-CACHE_READ_MULT = 0.1
-
-
-def _rate_for(model: str) -> tuple[float, float] | None:
-    """(input, output) $/Mtok for a record's model(s), or None if not priceable.
-
-    The model field may list several models joined by ", " (an agent that
-    switched models). We can only price the aggregated tokens if every model
-    shares one rate; a mixed-rate record returns None rather than a wrong figure.
-    """
-    rates = {
-        PRICING[m.strip()] for m in model.split(",") if m.strip() in PRICING
-    }
-    named = [m.strip() for m in model.split(",") if m.strip()]
-    if len(rates) == 1 and all(m in PRICING for m in named):
-        return next(iter(rates))
-    return None
 
 
 @dataclass
@@ -114,22 +73,7 @@ class AgentUsage:
             + self.output_tokens
         )
 
-    @property
-    def cost_usd(self) -> float | None:
-        """Estimated USD cost, or None when the model has no known rate."""
-        rate = _rate_for(self.model)
-        if rate is None:
-            return None
-        in_rate, out_rate = rate
-        return (
-            self.input_tokens * in_rate
-            + self.cache_creation_tokens * in_rate * CACHE_WRITE_MULT
-            + self.cache_read_tokens * in_rate * CACHE_READ_MULT
-            + self.output_tokens * out_rate
-        ) / 1_000_000
-
     def as_row(self) -> dict[str, object]:
-        cost = self.cost_usd
         return {
             "task": self.task,
             "description": self.description,
@@ -140,7 +84,6 @@ class AgentUsage:
             "cache_read_tokens": self.cache_read_tokens,
             "output_tokens": self.output_tokens,
             "total_tokens": self.total_tokens,
-            "cost_usd": f"{cost:.4f}" if cost is not None else "",
             "started": self.started,
             "agent_id": self.agent_id,
         }
@@ -318,29 +261,19 @@ def _print_summary(records: list[AgentUsage]) -> None:
     table.add_column("Cache", justify="right")
     table.add_column("Output", justify="right")
     table.add_column("Total", justify="right")
-    table.add_column("Cost", justify="right")
 
     by_task: dict[str, list[AgentUsage]] = {}
     for record in records:
         by_task.setdefault(record.task or record.description or "(unlabelled)", []).append(record)
 
     grand = 0
-    grand_cost = 0.0
-    any_unpriced = False
     for label, group in by_task.items():
         models = sorted({m for g in group for m in g.model.split(", ") if m})
         inp = sum(g.input_tokens for g in group)
         cache = sum(g.cache_creation_tokens + g.cache_read_tokens for g in group)
         out = sum(g.output_tokens for g in group)
         total = sum(g.total_tokens for g in group)
-        costs = [g.cost_usd for g in group]
         grand += total
-        priced = [c for c in costs if c is not None]
-        group_cost = sum(priced)
-        grand_cost += group_cost
-        if any(c is None for c in costs):
-            any_unpriced = True
-        cost_cell = f"${group_cost:,.2f}{'*' if any(c is None for c in costs) else ''}"
         table.add_row(
             label,
             ", ".join(models),
@@ -349,21 +282,10 @@ def _print_summary(records: list[AgentUsage]) -> None:
             f"{cache:,}",
             f"{out:,}",
             f"{total:,}",
-            cost_cell,
         )
     table.add_section()
-    table.add_row(
-        "TOTAL", "", str(len(records)), "", "", "", f"{grand:,}", f"${grand_cost:,.2f}"
-    )
+    table.add_row("TOTAL", "", str(len(records)), "", "", "", f"{grand:,}")
     console.print(table)
-    if any_unpriced:
-        console.print(
-            "[dim]* some rows have no rate for their model; cost excludes them.[/]"
-        )
-    console.print(
-        "[dim]Cost is an estimate at list prices "
-        "(cache writes 1.25x input, reads 0.1x).[/]"
-    )
 
 
 def token_report(
