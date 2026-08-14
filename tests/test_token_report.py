@@ -53,6 +53,28 @@ def test_aggregate_agent_sums_usage_and_captures_model():
     assert rec.total_tokens == 200
 
 
+def test_cost_usd_prices_each_token_category():
+    lines = [
+        _assistant("claude-opus-4-8", input_tokens=1_000_000, output_tokens=1_000_000,
+                   cache_creation_input_tokens=1_000_000, cache_read_input_tokens=1_000_000),
+    ]
+    rec = aggregate_agent(lines, {"description": "T1: x"})
+    # opus rates $5 in / $25 out: 5 + 25 + 5*1.25 + 5*0.1 = 36.75
+    assert rec is not None
+    assert round(rec.cost_usd, 2) == 36.75
+    assert rec.as_row()["cost_usd"] == "36.7500"
+
+
+def test_cost_usd_none_for_unknown_model():
+    rec = aggregate_agent(
+        [_assistant("some-other-model", input_tokens=1000, output_tokens=1000)],
+        {"description": "T1: x"},
+    )
+    assert rec is not None
+    assert rec.cost_usd is None
+    assert rec.as_row()["cost_usd"] == ""
+
+
 def test_aggregate_agent_returns_none_without_usage():
     assert aggregate_agent(['{"type": "user", "message": {}}'], {"description": "T1: x"}) is None
     assert aggregate_agent([], {}) is None
